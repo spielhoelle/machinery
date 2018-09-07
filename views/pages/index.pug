@@ -1,7 +1,7 @@
 extends ../layout.pug
 block content
   h1 Easy POST request example
-  form(action='/', method='post')
+  form(action='http://localhost:3000', method='post')
     input(type='text', name='fname')
     br
     input(type='number', name='age')
@@ -9,3 +9,4 @@ block content
     input(type='file', name='photo')
     br
     button Save
+

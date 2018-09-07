@@ -22,7 +22,7 @@ function collectRequestData(request, callback) {
 function handleGetRequests (req, cb){
   var html = "";
   if (req.url == "/") {
-    html = pug.renderFile('index.pug' );
+    html = pug.renderFile('pages/index.pug' );
   }
   else if (req.url == "/about") {
     html = pug.renderFile('about.pug' );
@@ -43,12 +43,13 @@ const server = http.createServer((req, res) => {
         console.log(result);
         res.end(`Parsed data belonging to ${result.fname}`);
       });
-    } else {
-      handleGetRequests(req, html => {
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(html);
-      })
     }
+    //else {
+      //handleGetRequests(req, html => {
+        //res.writeHead(200, { "Content-Type": "text/html" });
+        //res.end(html);
+      //})
+    //}
 });
 
 server.listen(3000);
