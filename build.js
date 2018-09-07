@@ -29,7 +29,6 @@ var getPosts = async () => {
 
 var run = async() => {
   try{
-    console.log('#####', "run");
     var posts = await getPosts()
     return files.forEach((file, i) => {
       const fileData = path.parse(file);
@@ -42,17 +41,20 @@ var run = async() => {
   }
 }
 
-run().then(() => {
-  mongoose.disconnect()
-})
 if(process.env.NODE_ENV !== 'production') {
-  console.log('is watching');
-  chokidar.watch('./views', {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
-    run()
-  });
-
+  console.log('Developement watch');
+  run().then((res) => {
+    console.log('run finied');
+    chokidar.watch('views', {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
+      run()
+    });
+  })
 } else {
-  return console.log('Production build');
+  console.log('Production build');
+  run().then(() => {
+    mongoose.disconnect()
+    console.log('Production build');
+  })
 }
 
 

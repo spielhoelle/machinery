@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently \"npm run build\" \"serve ./dist\" -n \"BUILD,SERVE\" --prefix name -c \"yellow.bold,magenta.bold\"",
     "build": "node ./build",
     "build:prod": "cross-env NODE_ENV=production node ./build && bash deploy.sh",
     "serve": "serve ./dist"
