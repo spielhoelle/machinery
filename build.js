@@ -42,7 +42,9 @@ var run = async() => {
   }
 }
 
-run()
+run().then(() => {
+  mongoose.disconnect()
+})
 if(process.env.NODE_ENV !== 'production') {
   console.log('is watching');
   chokidar.watch('./views', {ignored: /(^|[\/\\])\../}).on('all', (event, path) => {
@@ -52,5 +54,5 @@ if(process.env.NODE_ENV !== 'production') {
 } else {
   return console.log('Production build');
 }
-mongoose.disconnect()
+
 
