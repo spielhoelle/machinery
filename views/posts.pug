@@ -1,0 +1,9 @@
+.card-deck.mb-3.text-center
+  each post in posts
+    .card.mb-4.shadow-sm
+      .card-header
+        h4.my-0.font-weight-normal=post.name
+      .card-body
+        h1.card-title.pricing-card-title=post.order 
+        p=post.content
+        button.btn.btn-lg.btn-block.btn-outline-primary(type='button') Sign up for free

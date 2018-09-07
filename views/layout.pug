@@ -5,10 +5,13 @@ html
       script(src='/jquery.js')
     link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', integrity='sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO', crossorigin='anonymous')
   body
-    nav
-      a(href='/') Home
-      a(href='/about.html') About
-      a(href='/landing.html') Landingpage
+    .d-flex.flex-column.flex-md-row.align-items-center.p-3.px-md-4.mb-3.bg-white.border-bottom.shadow-sm
+      a.mr-md-auto(href='/')
+        h5.my-0.font-weight-normal Static site gen
+      nav.my-2.my-md-0.mr-md-3
+        a.p-2.text-dark(href='about.html') About
+        a.p-2.text-dark(href='stuff.html') Stuff
+      a.btn.btn-outline-primary(href='#') Sign up
     block content
     block foot
       #footer

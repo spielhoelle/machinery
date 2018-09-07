@@ -1,12 +1,27 @@
 extends ../layout.pug
 block content
-  h1 Easy POST request example
-  form(action='http://localhost:3000', method='post')
-    input(type='text', name='fname')
-    br
-    input(type='number', name='age')
-    br
-    input(type='file', name='photo')
-    br
-    button Save
+  .container.mt-5.text-left
+
+    include ../posts.pug
+
+    .row
+      .col-md-4.offset-md-4
+
+        form.form-signin(method='POST', action='/posts?alert=create')
+          h2 Create a new Post
+
+          .mb-3
+            label.sr-only(for='inputName') Name
+            input#inputName.form-control(name='name', type='text', placeholder='Name', required='', autofocus='')
+
+          .mb-3
+            label.sr-only(for='inputContent') Content
+            textarea#inputContent.form-control(name='content', type='password', placeholder='Content', required='')
+          .mb-3
+            label.sr-only(for='inputContent') Order
+            input#inputOrder.form-control(name='order', type='number', placeholder='Order', required='', autofocus='')
+
+
+          button.btn.btn-lg.btn-primary.btn-block(type='submit') Create
+
 
