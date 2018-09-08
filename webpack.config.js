@@ -6,7 +6,8 @@ module.exports = (env, argv) => {
   return {
     // Define the entry points of our application (can be multiple for different sections of a website)
     entry: {
-      main: "./src/index.js",
+      frontend: "./src/frontend.js",
+      backend: "./src/backend.js",
       style: "./src/style.js"
     },
 
@@ -53,7 +54,23 @@ module.exports = (env, argv) => {
             }
           ]
         },
-        // Use babel for JS files
+        {
+          test: /\.css$/,
+          use: [ 'style-loader', 'css-loader' ]
+        },
+        {
+          test: /\.svg$/,
+          loader: 'svg-inline-loader'
+        },
+        {
+          test: /\.(png|jpg|gif)$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {}
+            }
+          ]
+        },
         {
           test: /\.js$/,
           exclude: /(node_modules)/,
@@ -63,6 +80,10 @@ module.exports = (env, argv) => {
               presets: ["@babel/preset-env"]
             }
           }
+        }, {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          use: "babel-loader"
         }
       ]
     },
@@ -76,7 +97,8 @@ module.exports = (env, argv) => {
       new webpack.ProvidePlugin({
         $: "jquery",
         jQuery: "jquery"
-      })
+      }),
+      
     ]
   };
 };
