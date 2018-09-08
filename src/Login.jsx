@@ -29,7 +29,7 @@ class Login extends Component {
         <div className="h-100">
         {alert}
           <nav className="navbar navbar-expand-lg fixed-top navbar-light bg-light">
-            <a className="navbar-brand" href="#">Organice webinterface</a>
+            <a className="navbar-brand" href="#">Nanostatic webinterface</a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
@@ -46,7 +46,7 @@ class Login extends Component {
   
             <form onSubmit={this.props.onSubmit} className="form-signin">
               <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="h3 my-5 font-weight-normal">Welcome to OrgaNice</h1>
+              <h1 className="h3 my-5 font-weight-normal">Welcome to Nanostatic</h1>
               <label htmlFor="email" className="sr-only">Email address</label>
               <input onChange={this.props.onChange} type="email" id="email" className="form-control" placeholder="Email address" required autoFocus/>
               <label htmlFor="password" className="sr-only">Password</label>

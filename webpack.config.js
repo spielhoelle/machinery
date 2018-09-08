@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const dotenv = require("dotenv").config();
 
 module.exports = (env, argv) => {
   return {
@@ -90,6 +91,14 @@ module.exports = (env, argv) => {
 
     // Define used plugins
     plugins: [
+      new webpack.DefinePlugin({
+        PRODUCTION: JSON.stringify(true),
+        VERSION: JSON.stringify('5fa3b9'),
+        BROWSER_SUPPORTS_HTML5: true,
+        TWO: '1+1',
+        'typeof window': JSON.stringify('object'),
+        'process.env': JSON.stringify(process.env)
+      }),
       new MiniCssExtractPlugin({
         filename: "[name].css",
         chunkFilename: "[id].css"

@@ -10,7 +10,7 @@ console.log('#####', files);
 
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://tommy:password@ds247499.mlab.com:47499/superblog');
+mongoose.connect('mongodb://localhost:27017/superblog');
 
 var Schema       = mongoose.Schema;
 

@@ -9,6 +9,7 @@ import {
 
 const domain = process.env.REACT_APP_DOMAIN || "http://localhost";
 const port = process.env.REACT_APP_BACKENDPORT || 4000;
+console.log(process.env);
 class App extends Component {
   state = {
     user: false,
@@ -72,7 +73,7 @@ class App extends Component {
         <div className='h-100'>
           <Route exact path="/admin/" render={() => (
             this.state.user ? (
-              <Redirect to={{ pathname: '/scans' }} />
+              <Redirect to={{ pathname: '/admin/scans' }} />
             ) : (
                 <Login
                   onChange={this.onChange}
@@ -87,7 +88,7 @@ class App extends Component {
                 <Scans logout={this.logout} user={this.state.user} />
               </div>
             ) : (
-                <Redirect to={{ pathname: '/' }} />
+                <Redirect to={{ pathname: '/admin' }} />
               )
           )} />
         </div>
