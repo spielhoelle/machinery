@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Category = require("../models/Category");
-const ScanSchema = require("../models/Scan");
+const PostSchema = require("../models/Post");
 
 exports.getCategories = async (req, res, next) => {
   const user = req.user;
@@ -101,7 +101,7 @@ exports.updateCategory = async (req, res, next) => {
     res.json(200, {
       code: 200,
       message: `Successfully updated to: '${category.title}'`,
-      scan: {
+      post: {
         user_name: req.user.name,
         user_id: req.user._id,
         category_title: req.body.title,

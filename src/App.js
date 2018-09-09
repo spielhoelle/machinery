@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Login from './Login.jsx'
-import Scans from './Scans.jsx'
+import Posts from './Posts.jsx'
 import {
   BrowserRouter as Router,
   Route,
@@ -54,7 +54,7 @@ class App extends Component {
         if (data.user.token) {
           localStorage.setItem("user", JSON.stringify({ name: data.user.name, token: data.user.token }))
           this.setState({ user: { name: data.user.name, token: data.user.token } }, () => {
-            window.history.pushState(null, null, '/scans')
+            window.history.pushState(null, null, '/posts')
           })
 
 
@@ -73,7 +73,7 @@ class App extends Component {
         <div className='h-100'>
           <Route exact path="/admin/" render={() => (
             this.state.user ? (
-              <Redirect to={{ pathname: '/admin/scans' }} />
+              <Redirect to={{ pathname: '/admin/posts' }} />
             ) : (
                 <Login
                   onChange={this.onChange}
@@ -82,10 +82,10 @@ class App extends Component {
                   user={this.state.user} />
               )
           )} />
-          <Route exact path="/admin/scans" render={() => (
+          <Route exact path="/admin/posts" render={() => (
             this.state.user ? (
               <div>
-                <Scans logout={this.logout} user={this.state.user} />
+                <Posts logout={this.logout} user={this.state.user} />
               </div>
             ) : (
                 <Redirect to={{ pathname: '/admin' }} />

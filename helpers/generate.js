@@ -8,7 +8,7 @@ console.log('#####', files);
 
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/superblog');
+mongoose.connect('mongodb://localhost:27017/nanostatic');
 
 var Schema       = mongoose.Schema;
 

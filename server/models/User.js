@@ -5,8 +5,8 @@ const mongodbErrorHandler = require("mongoose-mongodb-errors");
 const passportLocalMongoose = require("passport-local-mongoose");
 
 const categorySchema = require("../models/Category");
-const scanSchema = require("../models/Scan");
-const scanModel = mongoose.model("Scan", scanSchema);
+const postSchema = require("../models/Post");
+const postModel = mongoose.model("post", postSchema);
 const categoryModel = mongoose.model("Category", categorySchema);
 
 const userSchema = new mongoose.Schema({
@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre("remove", function(next) {
   // 'this' is the user being removed. Provide callbacks here if you want
   // to be notified of the calls' result.
-  scanModel.remove({ user: this._id }).exec();
+  postModel.remove({ user: this._id }).exec();
   categoryModel.remove({ user: this._id }).exec();
   next();
 });

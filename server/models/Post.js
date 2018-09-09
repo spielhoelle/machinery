@@ -1,25 +1,18 @@
 const mongoose = require("mongoose");
 const mongodbErrorHandler = require("mongoose-mongodb-errors");
 
-const scanSchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
     required: "user ID is needed"
   },
-  category: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: "Category"
-    }
-  ],
-  // category: {
-  //   type: mongoose.Schema.ObjectId,
-  //   ref: "Category"
-  // },
-  // category: {
-  //   type: String
-  // },
+  //category: [
+    //{
+      //type: mongoose.Schema.ObjectId,
+      //ref: "Category"
+    //}
+  //],
   title: {
     type: String,
     trim: true,
@@ -41,18 +34,15 @@ const scanSchema = new mongoose.Schema({
   date: {
     type: Number
   },
-  recognizedText: {
-    type: mongoose.Schema.Types.Mixed
-  },
   image: {
     type: Buffer
     // contentType: String
   }
-  // date_from_scan : {
+  // date_from_post : {
   //   content:
   //   }
 });
 
-scanSchema.plugin(mongodbErrorHandler);
+postSchema.plugin(mongodbErrorHandler);
 
-module.exports = scanSchema;
+module.exports = postSchema;

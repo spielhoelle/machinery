@@ -25,7 +25,7 @@ const passportAuthenticate = function(req, res, next) {
 
 const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
-const ScanController = require("../controllers/ScanController");
+const PostController = require("../controllers/PostController");
 const CategoryController = require("../controllers/CategoryController");
 
 // USER ROUTES
@@ -39,29 +39,29 @@ router.post(
 
 router.post("/users/delete", passportAuthenticate, UserController.deleteUser);
 
-// SCAN ROUTES
-router.get("/scans", passportAuthenticate, ScanController.getScans);
+// post ROUTES
+router.get("/posts", passportAuthenticate, PostController.getPosts);
 
-router.get("/scans/:id", passportAuthenticate, ScanController.getSingleScan);
+router.get("/posts/:id", passportAuthenticate, PostController.getSinglePost);
 
 router.post(
-  "/scans/add",
+  "/posts/add",
   passportAuthenticate,
-  ScanController.UploadAndResize,
-  //ScanController.recognizeText,
-  ScanController.createScan
+  PostController.UploadAndResize,
+  //PostController.recognizeText,
+  PostController.createPost
 );
 
 router.post(
-  "/scans/:id/update",
+  "/posts/:id/update",
   passportAuthenticate,
-  ScanController.updateScan
+  PostController.updatePost
 );
 
 router.post(
-  "/scans/:id/delete",
+  "/posts/:id/delete",
   passportAuthenticate,
-  ScanController.deleteScan
+  PostController.deletePost
 );
 
 // CATEGORY ROUTES

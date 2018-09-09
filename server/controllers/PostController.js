@@ -1,53 +1,53 @@
 const { parse, stringify } = require("flatted/cjs");
 const mongoose = require("mongoose");
-const scanSchema = require("../models/Scan");
-const Scan = mongoose.model("Scan", scanSchema);
+const postSchema = require("../models/Post");
+const Post = mongoose.model("Post", postSchema);
 const jimp = require("jimp");
 const uuid = require("uuid");
 const fs = require("fs");
 const path = require("path");
 const { createRecursiveFolderPath } = require("../handlers/helpers");
-const FILE_PATH = "./temp/uploads/scans/";
+const FILE_PATH = "./temp/uploads/posts/";
 
-exports.getScans = async (req, res, next) => {
+exports.getPosts = async (req, res, next) => {
   const user = req.user;
   try {
-    const scans = await Scan.find({ user: req.user._id });
+    const posts = await Post.find({ user: req.user._id });
 
-    // scans.forEach(scan => {
+    // posts.forEach(post => {
     //   let imagePath = fs.statSync(
-    //     path.join(process.env.PWD, "temp", "uploads", "scans", scan.image)
+    //     path.join(process.env.PWD, "temp", "uploads", "posts", post.image)
     //   );
     //   console.log(imagePath);
-    //   scan.file = imagePath;
+    //   post.file = imagePath;
     // });
 
     res.json(200, {
       code: 200,
-      message: `All scans for '${user.name}'`,
+      message: `All posts for '${user.name}'`,
       user: user,
-      scans: scans
+      posts: posts
     });
   } catch (err) {
     console.log(err);
     res.json(404, {
       code: 404,
-      message: `No scans were found for '${user.name}'`
+      message: `No posts were found for '${user.name}'`
     });
   }
   next();
 };
 
-exports.getSingleScan = async (req, res, next) => {
+exports.getSinglePost = async (req, res, next) => {
   const user = req.user;
   try {
-    const scan = await Scan.findOne({ _id: req.params.id });
+    const post = await Post.findOne({ _id: req.params.id });
     // const imagePath = path.join(
     //   process.env.PWD,
     //   "temp",
     //   "uploads",
-    //   "scans",
-    //   scan.image
+    //   "posts",
+    //   post.image
     // );
     // // console.log("image path");
     // // console.log(imagePath);
@@ -56,14 +56,14 @@ exports.getSingleScan = async (req, res, next) => {
 
     res.json(200, {
       code: 200,
-      message: `Single scan for '${user.name}' `,
-      scan: scan
+      message: `Single post for '${user.name}' `,
+      post: post
       // file: base64
     });
   } catch (err) {
     res.json(404, {
       code: 404,
-      message: `Scan not found for '${user.name}' or Error: ${err}`
+      message: `Post not found for '${user.name}' or Error: ${err}`
     });
     next(false);
     return;
@@ -119,25 +119,25 @@ exports.UploadAndResize = async (req, res, next) => {
 };
 
 
-exports.createScan = async (req, res, next) => {
+exports.createPost = async (req, res, next) => {
   try {
-    const foundScan = await Scan.findOne(
+    const foundPost = await Post.findOne(
       { title: req._body.title },
       req.body
     ).exec();
 
-    if (foundScan) {
+    if (foundPost) {
       res.json(401, {
         code: 401,
-        message: "This scan is already existed , Please choose another name"
+        message: "This post is already existed , Please choose another name"
       });
-      console.log(`This scan is already existed , Please choose another name`);
+      console.log(`This post is already existed , Please choose another name`);
       next(false);
       return;
     }
 
     // console.log(req.base64);
-    let scanObject = {
+    let postObject = {
       user: req.user._id,
       title: req._body.title,
       category: req._body.category,
@@ -146,12 +146,12 @@ exports.createScan = async (req, res, next) => {
       image: req.base64
     };
 
-    const scan = await new Scan(scanObject).save();
+    const post = await new Post(postObject).save();
 
     res.json(200, {
       code: 200,
-      message: `Successfully created '${scan.title}'`,
-      scan: scanObject
+      message: `Successfully created '${post.title}'`,
+      post: postObject
     });
   } catch (err) {
     console.log(err);
@@ -162,15 +162,15 @@ exports.createScan = async (req, res, next) => {
   }
 };
 
-exports.updateScan = async (req, res, next) => {
+exports.updatePost = async (req, res, next) => {
   try {
-    const scan = await Scan.findOne({ _id: req.params.id }).exec();
-    // console.log("===================FOUND SCAN===============================");
-    // console.log(foundScan);
-    if (scan.title === req.body.title) {
+    const post = await Post.findOne({ _id: req.params.id }).exec();
+    // console.log("===================FOUND post===============================");
+    // console.log(foundPost);
+    if (post.title === req.body.title) {
       res.json(401, {
         code: 401,
-        message: "This scan is already existed , Please choose another name"
+        message: "This post is already existed , Please choose another name"
       });
       console.log(`Please choose another name`);
       next(false);
@@ -180,29 +180,29 @@ exports.updateScan = async (req, res, next) => {
     console.log("NOT FOUND ");
     res.json(404, {
       code: 404,
-      message: "scan not found"
+      message: "post not found"
     });
     next(false);
     return;
   }
 
   try {
-    const scan = await Scan.findOneAndUpdate({ _id: req.params.id }, req.body, {
+    const post = await Post.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true,
       runValidators: true
     }).exec();
 
-    console.log(scan);
-    console.log(`Successfully updated to: '${scan.title}'`);
+    console.log(post);
+    console.log(`Successfully updated to: '${post.title}'`);
     res.json(200, {
       code: 200,
-      message: `Successfully updated to: '${scan.title}'`,
-      scan: {
+      message: `Successfully updated to: '${post.title}'`,
+      post: {
         user_name: req.user.name,
         user_id: req.user._id,
-        scan_title: req.body.title,
-        scan_id: scan._id,
-        scan_category: req.body.category,
+        post_title: req.body.title,
+        post_id: post._id,
+        post_category: req.body.category,
         image: req.body.image,
         content: req.body.content,
         date: req.body.date
@@ -217,14 +217,14 @@ exports.updateScan = async (req, res, next) => {
   }
 };
 
-exports.deleteScan = async (req, res, next) => {
+exports.deletePost = async (req, res, next) => {
   try {
-    const scan = await Scan.findOne({ _id: req.params.id });
+    const post = await Post.findOne({ _id: req.params.id });
 
-    if (!scan) {
+    if (!post) {
       res.json(404, {
         code: 404,
-        message: `Scan not found`
+        message: `Post not found`
       });
       next(false);
       return;
@@ -232,17 +232,17 @@ exports.deleteScan = async (req, res, next) => {
   } catch (message) {
     res.json(404, {
       code: 404,
-      message: "Scan not found "
+      message: "Post not found "
     });
   }
 
   try {
-    const scan = await Scan.findOne({ _id: req.params.id });
+    const post = await Post.findOne({ _id: req.params.id });
 
-    if (req.params.id === scan.id) {
-      console.log("=============scan=============");
-      console.log(scan);
-      scan.remove();
+    if (req.params.id === post.id) {
+      console.log("=============post=============");
+      console.log(post);
+      post.remove();
 
       console.log(`Successfully removed`);
       res.json(200, {
@@ -258,10 +258,10 @@ exports.deleteScan = async (req, res, next) => {
   }
 };
 
-exports.deleteAllScans = async (req, res, next) => {
-  Scan.remove({}, function(err) {
-    console.log("All SCANS are removed");
-    res.send("Successfully deleted all SCANS");
+exports.deleteAllPosts = async (req, res, next) => {
+  Post.remove({}, function(err) {
+    console.log("All postS are removed");
+    res.send("Successfully deleted all postS");
     next();
   });
 };

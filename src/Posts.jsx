@@ -5,23 +5,23 @@ import "./App.css"
 import logo from './logo.svg';
 const domain = process.env.REACT_APP_DOMAIN || "http://localhost";
 const port = process.env.REACT_APP_BACKENDPORT || 4000;
-class Scans extends Component {
+class posts extends Component {
 
   state = {
-    scans: []
+    posts: []
   }
   componentWillMount = () => {
     const token = localStorage.getItem("user")
     try {
-      this.getScans(JSON.parse(token).token)
+      this.getposts(JSON.parse(token).token)
     }
     catch (e) {
       console.error("failed", e)
     }
   }
-  getScans = async token => {
+  getposts = async token => {
     console.log(token);
-    fetch(`http://${domain}:${port}/api/scans`, {
+    fetch(`http://${domain}:${port}/api/posts`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -30,14 +30,15 @@ class Scans extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        this.setState({ scans: data.scans })
+        this.setState({ posts: data.posts })
       })
       .catch(err => {
-        console.log("fetch in Scans.jsx failed: ", err)
+        console.log("fetch in posts.jsx failed: ", err)
       })
   };
 
   render() {
+  console.log(this.state.posts);
     const posttemplate =
       (<table className="py-5 table">
         <thead>
@@ -49,12 +50,13 @@ class Scans extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.state.scans && this.state.scans.map(scan => (
-            <tr key={scan._id}>
-              <th>{scan._id}</th>
-              <td>{scan.title}</td>
-              <td className=""><span>{scan.content}</span></td>
-              <td>{scan.date}</td>
+          {this.state.posts && this.state.posts.map(post => (
+            <tr key={post._id}>
+              <th>{post._id}</th>
+              <td>{post.title}</td>
+              <td className=""><span>{post.content}</span></td>
+              <td>{post.date}</td>
+              <td><img src={`data:image/jpg;base64,${post.image}`}/></td>
             </tr>
           ))
 
@@ -81,15 +83,15 @@ class Scans extends Component {
         <div className="text-center">
           <img src={logo} className="my-5 App-logo" alt="logo" />
         </div>
-        <h2>Hey {this.props.user.name.charAt(0).toUpperCase() + this.props.user.name.slice(1)}, this are your Scans:</h2>
+        <h2>Hey {this.props.user.name.charAt(0).toUpperCase() + this.props.user.name.slice(1)}, this are your posts:</h2>
         {posttemplate}
       </div>
     );
   }
 }
 
-Scans.propTypes = {
+posts.propTypes = {
   user: PropTypes.object
 };
 
-export default Scans;
+export default posts;

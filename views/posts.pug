@@ -2,8 +2,8 @@
   each post in posts
     .card.mb-4.shadow-sm
       .card-header
-        h4.my-0.font-weight-normal=post.name
+        h4.my-0.font-weight-normal=post.title
       .card-body
-        h1.card-title.pricing-card-title=post.order 
+        h1.card-title.pricing-card-title=post.imageName 
         p=post.content
         button.btn.btn-lg.btn-block.btn-outline-primary(type='button') Sign up for free

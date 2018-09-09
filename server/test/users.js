@@ -11,8 +11,8 @@ const User = mongoose.model("User", userSchema);
 const categorySchema = require("../models/Category");
 const Category = mongoose.model("Category", categorySchema);
 
-// const scanSchema = require("../models/Scan");
-// const Scan = mongoose.model("Scan", scanSchema);
+// const postSchema = require("../models/Post");
+// const Post = mongoose.model("Post", postSchema);
 
 // let should = chai.should();
 let expect = chai.expect;
@@ -27,7 +27,7 @@ describe("/POST user", () => {
       });
     });
 
-    // Scan.remove({}, err => {
+    // Post.remove({}, err => {
     //   done();
     // });
   });

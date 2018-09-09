@@ -4,22 +4,22 @@ let mongoose = require("mongoose");
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../app');
-const scanSchema = require("../models/Scan");
-const Scan = mongoose.model("Scan", scanSchema);
+const postSchema = require("../models/Post");
+const Post = mongoose.model("Post", postSchema);
 let should = chai.should();
 
 chai.use(chaiHttp);
-describe('Scans', () => {
+describe('Posts', () => {
 	beforeEach((done) => { 
-		Scan.remove({}, (err) => {
+		Post.remove({}, (err) => {
 			done();
 		});
 	});
 
-	describe('/GET scan', () => {
-		it('it should GET all the scans', (done) => {
+	describe('/GET post', () => {
+		it('it should GET all the posts', (done) => {
 			chai.request(server)
-				.get('/api/scans')
+				.get('/api/posts')
 				.end((err, res) => {
 					res.should.have.status(403);
 					res.body.should.be.a('object');

@@ -5,7 +5,7 @@ const passport = require("passport");
 // Import the controllers
 const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
-const ScanController = require("../controllers/ScanController");
+const PostController = require("../controllers/PostController");
 const CategoryController = require("../controllers/CategoryController");
 
 // router.post("/register", UserController.register, function(req, res, next) {
@@ -17,7 +17,7 @@ router.post("/register", UserController.register);
 router.post("/login", AuthController.login);
 
 router.del("/users/delete-all", UserController.deleteAllUsers);
-router.del("/scans/delete-all", ScanController.deleteAllScans);
+router.del("/scans/delete-all", PostController.deleteAllPosts);
 router.del("/categories/delete-all", CategoryController.deleteAllCategories);
 
 module.exports = router;
