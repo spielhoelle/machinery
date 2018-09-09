@@ -44,13 +44,13 @@ router.get("/scans", passportAuthenticate, ScanController.getScans);
 
 router.get("/scans/:id", passportAuthenticate, ScanController.getSingleScan);
 
-//router.post(
-  //"/scans/add",
-  //passportAuthenticate,
-  //ScanController.UploadAndResize,
+router.post(
+  "/scans/add",
+  passportAuthenticate,
+  ScanController.UploadAndResize,
   //ScanController.recognizeText,
-  //ScanController.createScan
-//);
+  ScanController.createScan
+);
 
 router.post(
   "/scans/:id/update",

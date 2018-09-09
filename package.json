@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run build\" \"node server/index.js\" \"webpack --mode development --watch\" \"serve ./dist\" -n \"BUILD,SERVER,WEBPACK,SERVE\" --prefix name -c \"pink.bold,yellow.bold,red.bold,magenta.bold\"",
+    "dev": "concurrently \"npm run build\" \"nodemon server/index.js\" \"webpack --mode development --watch\" \"serve ./dist\" -n \"BUILD,SERVER,WEBPACK,SERVE\" --prefix name -c \"pink.bold,yellow.bold,red.bold,magenta.bold\"",
     "build": "node ./build",
     "build:prod": "cross-env NODE_ENV=production node ./build && bash deploy.sh",
     "serve": "serve ./dist",
