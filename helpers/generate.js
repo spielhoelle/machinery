@@ -12,11 +12,7 @@ mongoose.connect('mongodb://localhost:27017/nanostatic');
 
 var Schema       = mongoose.Schema;
 
-var PostSchema   = new Schema({
-    name: String,
-    content: String,
-    order: Number
-});
+const PostSchema = require("../server/models/Post");
 
 var Post = mongoose.model('Post', PostSchema);
 

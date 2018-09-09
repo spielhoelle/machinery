@@ -1,6 +1,8 @@
 const Router = require("restify-router").Router;
 const router = new Router();
 const passport = require("passport");
+
+const generate = require('../../helpers/generate');
 const passportAuthenticate = function(req, res, next) {
   passport.authenticate("jwt", { session: false }, function(err, user, info) {
     if (err) {
@@ -94,6 +96,27 @@ router.post(
   "/categories/:id/delete",
   passportAuthenticate,
   CategoryController.deleteCategory
+);
+router.post(
+  "/generate",
+  passportAuthenticate,
+   async (req, res, next) => {
+    const user = req.user;
+    try {
+      var result = generate();
+      res.json(200, {
+        code: 200,
+        message: `Pages created`,
+      });
+    } catch (err) {
+      res.json(404, {
+        code: 404,
+        message: `Post not found for '${user.name}' or Error: ${err}`
+      });
+      next(false);
+      return;
+    }
+  }
 );
 
 module.exports = router;
