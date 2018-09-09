@@ -9,7 +9,7 @@ import {
 
 const domain = process.env.REACT_APP_DOMAIN || "http://localhost";
 const port = process.env.REACT_APP_BACKENDPORT || 4000;
-console.log(process.env);
+
 class App extends Component {
   state = {
     user: false,
@@ -17,13 +17,18 @@ class App extends Component {
     form: {
       email: "tommy@example.com",
       password: "password123"
-    }
+    },
+    posts: []
   }
   componentWillMount = () => {
+    const token = this.getToken()
+    this.getposts(token);
+  }
+  getToken = () => {
     const user = localStorage.getItem("user")
     if (user) {
-      console.log(user)
       this.setState({ user: { name: JSON.parse(localStorage.getItem("user")).name, token: JSON.parse(localStorage.getItem("user")).token } })
+      return JSON.parse(localStorage.getItem("user")).token
     }
   }
   onChange = (event) => {
@@ -32,11 +37,46 @@ class App extends Component {
     this.setState({ form })
   }
   logout = () => {
-    console.log('loggedout');
-
     localStorage.removeItem("user")
     this.setState({ user: null })
     window.history.pushState(null, null, '/')
+  }
+
+  getposts = async token => {
+    fetch(`http://${domain}:${port}/api/posts`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ posts: data.posts })
+      })
+      .catch(err => {
+        console.log("fetch in posts.jsx failed: ", err)
+      })
+  };
+  deletePost = (id) => {
+    const token = this.getToken();
+
+    fetch(`http://${domain}:${port}/api/posts/${id}/delete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        let posts = [...this.state.posts]
+        posts = posts.filter(p => p._id !== id)
+        this.setState({ posts: posts })
+      })
+      .catch(err => {
+        console.log("fetch in posts.jsx failed: ", err)
+      })
   }
   onSubmit = (event) => {
     event.preventDefault();
@@ -49,7 +89,6 @@ class App extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('data', data);
 
         if (data.user.token) {
           localStorage.setItem("user", JSON.stringify({ name: data.user.name, token: data.user.token }))
@@ -85,7 +124,12 @@ class App extends Component {
           <Route exact path="/admin/posts" render={() => (
             this.state.user ? (
               <div>
-                <Posts logout={this.logout} user={this.state.user} />
+                <Posts 
+                  posts={this.state.posts}
+                  deletePost={this.deletePost}
+                  logout={this.logout} 
+                  user={this.state.user}
+                />
               </div>
             ) : (
                 <Redirect to={{ pathname: '/admin' }} />
