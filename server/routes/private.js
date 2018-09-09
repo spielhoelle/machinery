@@ -2,7 +2,6 @@ const Router = require("restify-router").Router;
 const router = new Router();
 const passport = require("passport");
 
-const generate = require('../../helpers/generate');
 const passportAuthenticate = function(req, res, next) {
   passport.authenticate("jwt", { session: false }, function(err, user, info) {
     if (err) {
@@ -29,6 +28,7 @@ const AuthController = require("../controllers/AuthController");
 const UserController = require("../controllers/UserController");
 const PostController = require("../controllers/PostController");
 const CategoryController = require("../controllers/CategoryController");
+const StaticPagesController = require("../controllers/StaticPagesController");
 
 // USER ROUTES
 router.post("/users/update", passportAuthenticate, AuthController.updateUser);
@@ -100,23 +100,7 @@ router.post(
 router.post(
   "/generate",
   passportAuthenticate,
-   async (req, res, next) => {
-    const user = req.user;
-    try {
-      var result = generate();
-      res.json(200, {
-        code: 200,
-        message: `Pages created`,
-      });
-    } catch (err) {
-      res.json(404, {
-        code: 404,
-        message: `Post not found for '${user.name}' or Error: ${err}`
-      });
-      next(false);
-      return;
-    }
-  }
+  StaticPagesController.generateStaticPages
 );
 
 module.exports = router;
