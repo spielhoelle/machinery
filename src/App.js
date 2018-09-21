@@ -11,9 +11,11 @@ const domain = process.env.REACT_APP_DOMAIN || "http://localhost";
 const port = process.env.REACT_APP_BACKENDPORT || 4000;
 
 class App extends Component {
+  fileInput = React.createRef();
   state = {
     user: false,
     alert: false,
+    postForm: {},
     form: {
       email: "tommy@example.com",
       password: "password123"
@@ -35,6 +37,11 @@ class App extends Component {
     let form = { ...this.state.form }
     form[event.target.id] = event.target.value
     this.setState({ form })
+  }
+  handlePostChange = (event) => {
+    let postForm = { ...this.state.postForm }
+    postForm[event.target.id] = event.target.value
+    this.setState({ postForm })
   }
   logout = () => {
     localStorage.removeItem("user")
@@ -73,6 +80,40 @@ class App extends Component {
         let posts = [...this.state.posts]
         posts = posts.filter(p => p._id !== id)
         this.setState({ posts: posts })
+      })
+      .catch(err => {
+        console.log("fetch in posts.jsx failed: ", err)
+      })
+  }
+  handlePostSubmit = (event) => {
+    event.preventDefault();
+    console.log(this.fileInput.current.files);
+    const token = this.getToken();
+
+    var photo = {
+      uri: this.state.postForm.image,
+      type: "image/jpeg",
+      name: "photo.jpg"
+    };
+    var body = new FormData();
+    body.append("date", Date.now());
+    body.append("image", photo);
+    body.append("title", this.state.postForm.title);
+    body.append("content", this.state.postForm.content);
+    body.append("order", this.state.postForm.order);
+    console.log(body);
+
+    fetch(`http://${domain}:${port}/api/posts/add`, {
+      method: 'POST',
+      headers: new Headers({
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${token}`
+      }),
+      body: body
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
       })
       .catch(err => {
         console.log("fetch in posts.jsx failed: ", err)
@@ -125,6 +166,9 @@ class App extends Component {
             this.state.user ? (
               <div>
                 <Posts 
+                  fileInput={this.fileInput}
+                  handlePostSubmit={this.handlePostSubmit}
+                  handlePostChange={this.handlePostChange}
                   posts={this.state.posts}
                   deletePost={this.deletePost}
                   logout={this.logout} 

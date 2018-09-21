@@ -32,7 +32,7 @@ const postSchema = new mongoose.Schema({
     /* "long string" includes the text of the image */
   },
   date: {
-    type: Number
+    type: Date
   },
   image: {
     type: Buffer

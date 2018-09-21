@@ -42,23 +42,21 @@ exports.getSinglePost = async (req, res, next) => {
   const user = req.user;
   try {
     const post = await Post.findOne({ _id: req.params.id });
-    // const imagePath = path.join(
-    //   process.env.PWD,
-    //   "temp",
-    //   "uploads",
-    //   "posts",
-    //   post.image
-    // );
-    // // console.log("image path");
-    // // console.log(imagePath);
-    // const image = fs.readFileSync(imagePath);
-    // const base64 = new Buffer(image).toString("base64");
+     const imagePath = path.join(
+       process.env.PWD,
+       "temp",
+       "uploads",
+       "posts",
+       post.imageName
+     );
+     const image = fs.readFileSync(imagePath);
+     const base64 = new Buffer(image).toString("base64");
 
     res.json(200, {
       code: 200,
       message: `Single post for '${user.name}' `,
-      post: post
-      // file: base64
+      post: post,
+      file: base64
     });
   } catch (err) {
     res.json(404, {
@@ -71,6 +69,7 @@ exports.getSinglePost = async (req, res, next) => {
 };
 
 exports.UploadAndResize = async (req, res, next) => {
+  ////Make image required
   if (!req.files || !req.files.image) {
     return res.json(404, {
       code: 404,
@@ -142,7 +141,7 @@ exports.createPost = async (req, res, next) => {
       title: req._body.title,
       category: req._body.category,
       imageName: req.image.name,
-      date: req._body.date,
+      date: new Date(),
       image: req.base64
     };
 

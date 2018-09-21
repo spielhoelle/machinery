@@ -5,6 +5,7 @@ import "./App.css"
 import logo from './logo.svg';
 class Posts extends Component {
   render() {
+
     const posttemplate =
       (<table className="py-5 table">
         <thead>
@@ -17,6 +18,7 @@ class Posts extends Component {
         </thead>
         <tbody>
           {this.props.posts && this.props.posts.map(post => (
+            img = 'data:image/jpeg;base64,' + btoa(post.image);
             <tr key={post._id}>
               <th>{post._id}</th>
               <td>{post.title}</td>
@@ -32,6 +34,26 @@ class Posts extends Component {
 
     return (
       <div className="container py-5">
+
+            <form onSubmit={this.props.handlePostSubmit} className="form-signin">
+              <img src={logo} className="App-logo" alt="logo" />
+              <h1 className="h3 my-5 font-weight-normal">Create a Post</h1>
+
+              <label htmlFor="title" className="sr-only">Title</label>
+              <input onChange={this.props.handlePostChange} type="title" id="title" className="form-control" placeholder="Title" required autoFocus/>
+
+              <label htmlFor="content" className="sr-only">Image</label>
+              <input onChange={this.props.handlePostChange}  ref={this.props.fileInput} type="file" id="image" className="form-control" placeholder="Title" required autoFocus/>
+
+              <label htmlFor="content" className="sr-only">Content</label>
+              <textarea onChange={this.props.handlePostChange} id="content" className="form-control" placeholder="Content" required></textarea>
+
+              <label htmlFor="order" className="sr-only">Order</label>
+              <input onChange={this.props.handlePostChange} type="number" id="order" className="form-control" placeholder="Order" required/>
+              <button className="btn btn-lg btn-primary btn-block">Create</button>
+            </form>
+
+
         <nav className="navbar navbar-expand-lg fixed-top navbar-light bg-light">
           <a className="navbar-brand" href="/admin">Nanostatic webinterface</a>
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
