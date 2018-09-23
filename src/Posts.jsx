@@ -1,8 +1,6 @@
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import "./App.css"
-import logo from './logo.svg';
 class Posts extends Component {
   render() {
 
@@ -10,21 +8,20 @@ class Posts extends Component {
       (<table className="py-5 table">
         <thead>
           <tr>
-            <th scope="col">#</th>
             <th scope="col">Title</th>
             <th scope="col">Content</th>
             <th scope="col">Date</th>
+            <th scope="col">Image</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
           {this.props.posts && this.props.posts.map(post => (
-            img = 'data:image/jpeg;base64,' + btoa(post.image);
             <tr key={post._id}>
-              <th>{post._id}</th>
               <td>{post.title}</td>
-              <td className=""><span>{post.content}</span></td>
+              <td><span>{post.content}</span></td>
               <td>{post.date}</td>
-              <td><img src={`data:image/jpg;base64,${post.image}`}/></td>
+              <td><img style={{width: 200}} src={post.image}/></td>
               <td><button onClick={(e) => this.props.deletePost(post._id)} className="btn btn-outline-danger">Delete</button></td>
             </tr>
             ))
@@ -33,26 +30,7 @@ class Posts extends Component {
       </table>)
 
     return (
-      <div className="container py-5">
-
-            <form onSubmit={this.props.handlePostSubmit} className="form-signin">
-              <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="h3 my-5 font-weight-normal">Create a Post</h1>
-
-              <label htmlFor="title" className="sr-only">Title</label>
-              <input onChange={this.props.handlePostChange} type="title" id="title" className="form-control" placeholder="Title" required autoFocus/>
-
-              <label htmlFor="content" className="sr-only">Image</label>
-              <input onChange={this.props.handlePostChange}  ref={this.props.fileInput} type="file" id="image" className="form-control" placeholder="Title" required autoFocus/>
-
-              <label htmlFor="content" className="sr-only">Content</label>
-              <textarea onChange={this.props.handlePostChange} id="content" className="form-control" placeholder="Content" required></textarea>
-
-              <label htmlFor="order" className="sr-only">Order</label>
-              <input onChange={this.props.handlePostChange} type="number" id="order" className="form-control" placeholder="Order" required/>
-              <button className="btn btn-lg btn-primary btn-block">Create</button>
-            </form>
-
+      <div className="py-5">
 
         <nav className="navbar navbar-expand-lg fixed-top navbar-light bg-light">
           <a className="navbar-brand" href="/admin">Nanostatic webinterface</a>
@@ -68,11 +46,39 @@ class Posts extends Component {
             </ul>
           </div>
         </nav>
-        <div className="text-center">
-          <img src={logo} className="my-5 App-logo" alt="logo" />
+
+        <div className="row mt-4">
+
+          <div className="col-md-8">
+            <h2>Hey {this.props.user.name.charAt(0).toUpperCase() + this.props.user.name.slice(1)}, this are your posts:</h2>
+            {posttemplate}
+          </div>
+        
+          <div className="col-md-4">
+            <form onSubmit={this.props.handlePostSubmit} className="form-signin">
+              <h2 className="">Create a Post</h2>
+
+              <div class="form-group">
+                  <label htmlFor="title" className="sr-only">Title</label>
+                  <input onChange={this.props.handlePostChange} type="title" id="title" className="form-control" placeholder="Title" required autoFocus/>
+              </div>
+              <div class="form-group">
+                  <label htmlFor="content" className="sr-only">Image</label>
+                  <input onChange={this.props.handlePostChange}  ref={this.props.fileInput} type="file" id="image" className="form-control" placeholder="Title" required autoFocus/>
+              </div>
+              <div class="form-group">
+                  <label htmlFor="content" className="sr-only">Content</label>
+                  <textarea onChange={this.props.handlePostChange} id="content" className="form-control" placeholder="Content" required></textarea>
+              </div>
+              <div class="form-group">
+                  <label htmlFor="order" className="sr-only">Order</label>
+                  <input onChange={this.props.handlePostChange} type="number" id="order" className="form-control" placeholder="Order" required/>
+              </div>
+              <button className="btn btn-lg btn-primary btn-block">Create</button>
+              </form>
+            </div>
+
         </div>
-        <h2>Hey {this.props.user.name.charAt(0).toUpperCase() + this.props.user.name.slice(1)}, this are your posts:</h2>
-        {posttemplate}
       </div>
     );
   }

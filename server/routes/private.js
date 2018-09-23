@@ -49,7 +49,7 @@ router.get("/posts/:id", passportAuthenticate, PostController.getSinglePost);
 router.post(
   "/posts/add",
   passportAuthenticate,
-  PostController.UploadAndResize,
+  //PostController.UploadAndResize,
   //PostController.recognizeText,
   PostController.createPost
 );

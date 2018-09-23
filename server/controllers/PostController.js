@@ -68,54 +68,56 @@ exports.getSinglePost = async (req, res, next) => {
   }
 };
 
-exports.UploadAndResize = async (req, res, next) => {
-  ////Make image required
-  if (!req.files || !req.files.image) {
-    return res.json(404, {
-      code: 404,
-      message: "NO IMAGE PROVIDED"
-    });
-    next(false);
-  }
+// used if we want to work with real images stored im /temp/uploads instead of base64 string in the DB
 
-  const filename = `${uuid.v4()}`;
-  const extension = req.files.image.type.split("/")[1];
+//exports.UploadAndResize = async (req, res, next) => {
+  //////Make image required
+  //if (!req.files || !req.files.image) {
+    //return res.json(404, {
+      //code: 404,
+      //message: "NO IMAGE PROVIDED"
+    //});
+    //next(false);
+  //}
 
-  const files = {
-    original: {
-      name: `${filename}.${extension}`,
-      path: FILE_PATH,
-      file: `${FILE_PATH}${filename}.${extension}`
-    },
-    thumbnail: {
-      name: `${filename}-400x400.${extension}`,
-      path: FILE_PATH,
-      file: `${FILE_PATH}${filename}-400x400.${extension}`
-    }
-  };
+  //const filename = `${uuid.v4()}`;
+  //const extension = req.files.image.type.split("/")[1];
 
-  createRecursiveFolderPath(FILE_PATH);
+  //const files = {
+    //original: {
+      //name: `${filename}.${extension}`,
+      //path: FILE_PATH,
+      //file: `${FILE_PATH}${filename}.${extension}`
+    //},
+    //thumbnail: {
+      //name: `${filename}-400x400.${extension}`,
+      //path: FILE_PATH,
+      //file: `${FILE_PATH}${filename}-400x400.${extension}`
+    //}
+  //};
 
-  // move the original image
-  fs.renameSync(req.files.image.path, files.original.file);
+  //createRecursiveFolderPath(FILE_PATH);
 
-  // create thumbnail
-  const thumbnailImage = await jimp.read(files.original.file);
-  await thumbnailImage.cover(400, 400).quality(70);
-  await thumbnailImage.write(files.thumbnail.file);
+  //// move the original image
+  //fs.renameSync(req.files.image.path, files.original.file);
 
-  // console.log("this should be the image");
-  // console.log(files.original.file);
+  //// create thumbnail
+  //const thumbnailImage = await jimp.read(files.original.file);
+  //await thumbnailImage.cover(400, 400).quality(70);
+  //await thumbnailImage.write(files.thumbnail.file);
 
-  const image = fs.readFileSync(files.original.file);
-  const base64 = new Buffer(image).toString("base64");
-  req.base64 = base64;
-  // console.log(base64);
+  //// console.log("this should be the image");
+  //// console.log(files.original.file);
 
-  req.image = files.original;
+  //const image = fs.readFileSync(files.original.file);
+  //const base64 = new Buffer(image).toString("base64");
+  //req.base64 = base64;
+  //// console.log(base64);
 
-  next();
-};
+  //req.image = files.original;
+
+  //next();
+//};
 
 
 exports.createPost = async (req, res, next) => {
@@ -135,14 +137,14 @@ exports.createPost = async (req, res, next) => {
       return;
     }
 
-    // console.log(req.base64);
     let postObject = {
       user: req.user._id,
       title: req._body.title,
       category: req._body.category,
-      imageName: req.image.name,
+      content: req._body.content,
+      //imageName: req.image.name,
       date: new Date(),
-      image: req.base64
+      image: req.body.image
     };
 
     const post = await new Post(postObject).save();

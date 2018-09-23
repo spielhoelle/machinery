@@ -65,6 +65,7 @@ class App extends Component {
         console.log("fetch in posts.jsx failed: ", err)
       })
   };
+
   deletePost = (id) => {
     const token = this.getToken();
 
@@ -87,37 +88,37 @@ class App extends Component {
   }
   handlePostSubmit = (event) => {
     event.preventDefault();
-    console.log(this.fileInput.current.files);
+    console.log("test");
     const token = this.getToken();
-
-    var photo = {
-      uri: this.state.postForm.image,
-      type: "image/jpeg",
-      name: "photo.jpg"
-    };
-    var body = new FormData();
-    body.append("date", Date.now());
-    body.append("image", photo);
-    body.append("title", this.state.postForm.title);
-    body.append("content", this.state.postForm.content);
-    body.append("order", this.state.postForm.order);
-    console.log(body);
-
-    fetch(`http://${domain}:${port}/api/posts/add`, {
-      method: 'POST',
-      headers: new Headers({
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Bearer ${token}`
-      }),
-      body: body
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      console.log(this.state);
+      const formData = {
+        'image': reader.result,
+        "title": this.state.postForm.title,
+        "content": this.state.postForm.content,      
+        "order": this.state.postForm.order,
+      }
+      fetch(`http://${domain}:${port}/api/posts/add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
       })
-      .catch(err => {
-        console.log("fetch in posts.jsx failed: ", err)
-      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          let posts = [ ...this.state.posts ]
+          posts.push(data.post)
+          this.setState({ posts })
+        })
+        .catch(err => {
+          console.log("fetch in posts.jsx failed: ", err)
+        })
+      };
+      reader.readAsDataURL(this.fileInput.current.files[0]);
   }
   onSubmit = (event) => {
     event.preventDefault();

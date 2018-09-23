@@ -1,3 +1,6 @@
+import jQuery from "jquery";
+import Popper from "popper.js";
+require('bootstrap');
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
