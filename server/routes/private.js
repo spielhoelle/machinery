@@ -29,6 +29,7 @@ const UserController = require("../controllers/UserController");
 const PostController = require("../controllers/PostController");
 const CategoryController = require("../controllers/CategoryController");
 const StaticPagesController = require("../controllers/StaticPagesController");
+const SettingController = require("../controllers/SettingController");
 
 // USER ROUTES
 router.post("/users/update", passportAuthenticate, AuthController.updateUser);
@@ -97,10 +98,22 @@ router.post(
   passportAuthenticate,
   CategoryController.deleteCategory
 );
+// STATIC PAGES ROUTES
 router.post(
   "/generate",
   passportAuthenticate,
   StaticPagesController.generateStaticPages
 );
+// SETTING ROUTES
 
+router.get(
+  "/setting",
+  passportAuthenticate,
+  SettingController.getSetting
+);
+router.post(
+  "/setting",
+  passportAuthenticate,
+  SettingController.saveSetting
+);
 module.exports = router;

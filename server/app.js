@@ -93,7 +93,6 @@ mongoose
   });
 
 server.use(function logger(req, res, next) {
-  console.log(req.body);
   console.log(new Date(), req.method, req.url);
   next();
 });
