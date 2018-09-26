@@ -32,20 +32,6 @@ class Posts extends Component {
     return (
       <div className="py-5">
 
-        <nav className="navbar navbar-expand-lg fixed-top navbar-light bg-light">
-          <a className="navbar-brand" href="/admin">Nanostatic webinterface</a>
-          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse justify-content-end navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav">
-
-              <li className="nav-item">
-                <button className="border-0 bg-transparent nav-item nav-link active" href="#" onClick={this.props.logout}>Logout</button>
-              </li>
-            </ul>
-          </div>
-        </nav>
 
         <div className="row mt-4">
 
@@ -58,19 +44,19 @@ class Posts extends Component {
             <form onSubmit={this.props.handlePostSubmit} className="form-signin">
               <h2 className="">Create a Post</h2>
 
-              <div class="form-group">
+              <div className="form-group">
                   <label htmlFor="title" className="sr-only">Title</label>
                   <input onChange={this.props.handlePostChange} type="title" id="title" className="form-control" placeholder="Title" required autoFocus/>
               </div>
-              <div class="form-group">
+              <div className="form-group">
                   <label htmlFor="content" className="sr-only">Image</label>
-                  <input onChange={this.props.handlePostChange}  ref={this.props.fileInput} type="file" id="image" className="form-control" placeholder="Title" required autoFocus/>
+                  <input onChange={this.props.handlePostChange}  ref={this.props.postFileInput} type="file" id="image" className="form-control" placeholder="Title" required autoFocus/>
               </div>
-              <div class="form-group">
+              <div className="form-group">
                   <label htmlFor="content" className="sr-only">Content</label>
                   <textarea onChange={this.props.handlePostChange} id="content" className="form-control" placeholder="Content" required></textarea>
               </div>
-              <div class="form-group">
+              <div className="form-group">
                   <label htmlFor="order" className="sr-only">Order</label>
                   <input onChange={this.props.handlePostChange} type="number" id="order" className="form-control" placeholder="Order" required/>
               </div>

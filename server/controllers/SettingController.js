@@ -8,7 +8,7 @@ exports.getSetting = async (req, res, next) => {
     res.json(200, {
       code: 200,
       message: `Setting found`,
-      setting: setting
+      setting: setting[0]
     });
   } catch (err) {
     console.log(err);
