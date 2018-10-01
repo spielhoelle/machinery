@@ -3,15 +3,12 @@ import Login from './Login.jsx'
 import Posts from './Posts.jsx'
 import Settings from './Settings.jsx'
 import Navbar from './Navbar.jsx'
-import {url} from './api'
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-} from 'react-router-dom'
+import withAuth from './withAuth'
+import AuthService from './AuthService'
+const Auth = AuthService.getInstance();
 
-const domain = process.env.REACT_APP_DOMAIN || "http://localhost";
-const port = process.env.REACT_APP_BACKENDPORT || 4000;
+import {url} from './api'
+import { BrowserRouter, Switch, Route, Redirect, } from 'react-router-dom'
 
 class App extends Component {
   postFileInput = React.createRef();
@@ -21,16 +18,12 @@ class App extends Component {
     alert: false,
     postForm: {},
     settingForm: {},
-    form: {
-      email: "",
-      password: ""
-    },
     posts: []
   }
   componentWillMount = () => {
     const token = this.getToken()
-    this.getposts(token);
-    this.getSettings(token);
+    //this.getposts(token);
+    //this.getSettings(token);
   }
   getSettings = async (token) => {
     fetch(`${url}/api/setting`, {
@@ -60,20 +53,13 @@ class App extends Component {
       return JSON.parse(localStorage.getItem("user")).token
     }
   }
-  onChange = (event) => {
-    let form = { ...this.state.form }
-    form[event.target.id] = event.target.value
-    this.setState({ form })
-  }
   handlePostChange = (event) => {
     let postForm = { ...this.state.postForm }
     postForm[event.target.id] = event.target.value
     this.setState({ postForm })
   }
   logout = () => {
-    localStorage.removeItem("user")
-    this.setState({ user: null })
-    window.history.pushState(null, null, '/')
+    Auth.logOut()
   }
 
   getposts = async token => {
@@ -115,11 +101,9 @@ class App extends Component {
   }
   handlePostSubmit = (event) => {
     event.preventDefault();
-    console.log("test");
     const token = this.getToken();
     const reader = new FileReader();
     reader.onload = (event) => {
-      console.log(this.state);
       const formData = {
         'image': reader.result,
         "title": this.state.postForm.title,
@@ -136,7 +120,6 @@ class App extends Component {
       })
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           let posts = [ ...this.state.posts ]
           posts.push(data.post)
           this.setState({ posts })
@@ -146,30 +129,6 @@ class App extends Component {
         })
       };
       reader.readAsDataURL(this.postFileInput.current.files[0]);
-  }
-  onLoginSubmit = (event) => {
-    event.preventDefault();
-    fetch(`${url}/api/login`, {
-      method: 'POST',
-      body: JSON.stringify({
-        email: this.state.form.email.toLowerCase(),
-        password: this.state.form.password,
-      }),
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.user.token) {
-        localStorage.setItem("user", JSON.stringify({ name: data.user.name, token: data.user.token }))
-        this.setState({ user: { name: data.user.name, token: data.user.token } }, () => {
-          window.history.pushState(null, null, '/posts')
-        })
-      } else if (data.code === 401) {
-        this.setState({ user: false, alert: { "error": data.message } })
-      }
-    })
-    .catch(err => {
-      console.log(err)
-    })
   }
   handleSettingChange = (event) => {
     let settingForm = { ...this.state.settingForm }
@@ -209,48 +168,46 @@ class App extends Component {
       })
   }
   render() {
-    return (
-      <Router>
-        <div className='h-100'>
-          <Navbar
-            logout={this.logout} 
-            settingForm={this.state.settingForm}
+    var settingComponent = () => {
+       return <Settings
+          settingFileInput={this.settingFileInput}
+          handleSettingSubmit={this.handleSettingSubmit}
+          handleSettingChange={this.handleSettingChange}
+          settingForm={this.state.settingForm}
+        />
+      }
+     var postComponent = (props) => {
+       return <Posts 
+            postFileInput={this.postFileInput}
+            handlePostSubmit={this.handlePostSubmit}
+            handlePostChange={this.handlePostChange}
+            posts={this.state.posts}
+            deletePost={this.deletePost}
+            {...props}
           />
-          <Route exact path="/admin/" render={() => (
-            this.state.user ? (
-              <Redirect to={{ pathname: '/admin/posts' }} />
-            ) : (
-                <Login
-                  onChange={this.onChange}
-                  onLoginSubmit={this.onLoginSubmit}
+       }
+
+     var loginComponent = (props) => {
+              return <Login
                   alert={this.state.alert}
-                  user={this.state.user} />
-              )
-          )} />
-          <Route exact path="/admin/posts" render={() => (
-            this.state.user ? (
-              <div>
-                <Settings
-                  settingFileInput={this.settingFileInput}
-                  handleSettingSubmit={this.handleSettingSubmit}
-                  handleSettingChange={this.handleSettingChange}
-                  settingForm={this.state.settingForm}
-                />
-                <Posts 
-                  postFileInput={this.postFileInput}
-                  handlePostSubmit={this.handlePostSubmit}
-                  handlePostChange={this.handlePostChange}
-                  posts={this.state.posts}
-                  deletePost={this.deletePost}
                   user={this.state.user}
-                />
-              </div>
-            ) : (
-                <Redirect to={{ pathname: '/admin' }} />
-              )
-          )} />
-        </div>
-      </Router>
+                  {...props}
+                  />
+                }
+    return (
+      <BrowserRouter>
+        <Switch>
+          <div className='h-100'>
+            <Navbar
+              logout={this.logout} 
+              settingForm={this.state.settingForm}
+            />
+            <Route path="/login" component={loginComponent} />
+            <Route exact path="/admin" component={postComponent} />
+            <Route path="/admin/settings" component={settingComponent}/>
+          </div>
+        </Switch>
+      </BrowserRouter>
     )
   }
 }

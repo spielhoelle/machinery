@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import withAuth from './withAuth'
 import "./App.css"
 class Posts extends Component {
   render() {
-
     const posttemplate =
       (<table className="py-5 table">
         <thead>
@@ -31,10 +31,7 @@ class Posts extends Component {
 
     return (
       <div className="py-5">
-
-
         <div className="row mt-4">
-
           <div className="col-md-8">
             <h2>Hey {this.props.user.name.charAt(0).toUpperCase() + this.props.user.name.slice(1)}, this are your posts:</h2>
             {posttemplate}
@@ -63,7 +60,6 @@ class Posts extends Component {
               <button className="btn btn-lg btn-primary btn-block">Create</button>
               </form>
             </div>
-
         </div>
       </div>
     );
@@ -76,4 +72,4 @@ Posts.propTypes = {
   user: PropTypes.object,
 };
 
-export default Posts;
+export default withAuth(Posts);

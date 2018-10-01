@@ -68,6 +68,19 @@ exports.login = (req, res, next) => {
         return next(err);
       }
 
+      const jwtToken = jwt.sign(
+        {
+          name: user.name,
+          email: user.email,
+          id: user._id
+        },
+        process.env.JWTSECRET,
+         {
+           expiresIn: "45m"
+         }
+      );
+
+      user.token = jwtToken;
       return res.json(200, {
         code: 200,
         message: `Welcome to Nanostatic '${user.name}'`,
@@ -173,6 +186,27 @@ exports.logout = (req, res, next) => {
   }
   next();
 };
+exports.refreshtoken = (req, res, next) => {
+  const user = req.user;
+  const jwtToken = jwt.sign(
+    {
+      name: user.name,
+      email: user.email,
+      id: user._id
+    },
+    process.env.JWTSECRET,
+     {
+       expiresIn: "45m"
+     }
+  );
+  user.token = jwtToken
+
+  res.json(200, {
+    code: 200,
+    message: "here is your new token",
+    user: user
+  });
+}
 
 // exports.logout = (req, res, next) => {
 //   passport.deserializeUser(function(id, done) {

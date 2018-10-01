@@ -4,7 +4,7 @@ const userSchema = require("../models/User");
 const User = mongoose.model("User", userSchema);
 const Post = require("../models/Post");
 const Category = require("../models/Category");
-const jwt = require("jsonwebtoken");
+
 const passport = require("passport");
 const promisify = require("es6-promisify");
 const path = require("path");
@@ -28,21 +28,7 @@ exports.register = async (req, res, next) => {
 
   register(user, req.body.password)
     .then(user => {
-      const jwtToken = jwt.sign(
-        {
-          // name: user.name,
-          email: user.email,
-          id: user._id
-        },
-        process.env.JWTSECRET
-        // {
-        //   expiresIn: "365d"
-        // }
-      );
 
-      console.log(jwtToken);
-
-      user.token = jwtToken;
       user.save();
 
       CategorySeedLoader.loadSeed(user);
@@ -87,8 +73,8 @@ exports.register = async (req, res, next) => {
           user: {
             name: req.body.name,
             email: req.body.email,
-            id: user._id,
-            token: user.token
+            id: user._id
+            //token: user.token
           }
         });
         next();

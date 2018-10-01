@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {url} from './api'
+import withAuth from './withAuth'
 import "./App.css"
 class Settings extends Component {
   render() {
@@ -34,4 +35,4 @@ class Settings extends Component {
 Settings.propTypes = {
 };
 
-export default Settings;
+export default withAuth(Settings);

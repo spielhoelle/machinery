@@ -39,7 +39,7 @@ router.post(
   passportAuthenticate,
   AuthController.updatePassword
 );
-
+router.get("/users/refresh_token", passportAuthenticate, AuthController.refreshtoken);
 router.post("/users/delete", passportAuthenticate, UserController.deleteUser);
 
 // post ROUTES
