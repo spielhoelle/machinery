@@ -16,13 +16,12 @@ class App extends Component {
   state = {
     user: false,
     alert: false,
-    postForm: {},
     settingForm: {},
     posts: []
   }
   componentWillMount = () => {
     const token = this.getToken()
-    //this.getposts(token);
+    this.getposts();
     //this.getSettings(token);
   }
   getSettings = async (token) => {
@@ -53,83 +52,50 @@ class App extends Component {
       return JSON.parse(localStorage.getItem("user")).token
     }
   }
-  handlePostChange = (event) => {
-    let postForm = { ...this.state.postForm }
-    postForm[event.target.id] = event.target.value
-    this.setState({ postForm })
-  }
   logout = () => {
     Auth.logOut()
   }
 
   getposts = async token => {
-    fetch(`${url}/api/posts`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
+    Auth.fetch(`${url}/api/posts`)
+    .then(data => {
+      this.setState({ posts: data.posts })
     })
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ posts: data.posts })
-      })
-      .catch(err => {
-        console.log("fetch in posts.jsx failed: ", err)
-      })
   };
 
   deletePost = (id) => {
-    const token = this.getToken();
-
-    fetch(`${url}/api/posts/${id}/delete`, {
+    Auth.fetch(`${url}/api/posts/${id}/delete`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      }
     })
-      .then(res => res.json())
-      .then(data => {
-        let posts = [...this.state.posts]
-        posts = posts.filter(p => p._id !== id)
-        this.setState({ posts: posts })
-      })
-      .catch(err => {
-        console.log("fetch in posts.jsx failed: ", err)
-      })
+    .then(data => {
+      let posts = [...this.state.posts]
+      posts = posts.filter(p => p._id !== id)
+      this.setState({ posts: posts })
+    })
   }
-  handlePostSubmit = (event) => {
+  handlePostSubmit = (event, post) => {
     event.preventDefault();
-    const token = this.getToken();
     const reader = new FileReader();
     reader.onload = (event) => {
       const formData = {
         'image': reader.result,
-        "title": this.state.postForm.title,
-        "content": this.state.postForm.content,      
-        "order": this.state.postForm.order,
+        "title": post.title,
+        "content": post.content,      
+        "order": post.order,
       }
-      fetch(`${url}/api/posts/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(formData)
+      Auth.fetch(`${url}/api/posts/add`, {
+          method: 'POST',
+          body: JSON.stringify(formData)
       })
-        .then(res => res.json())
-        .then(data => {
-          let posts = [ ...this.state.posts ]
-          posts.push(data.post)
-          this.setState({ posts })
-        })
-        .catch(err => {
-          console.log("fetch in posts.jsx failed: ", err)
-        })
-      };
-      reader.readAsDataURL(this.postFileInput.current.files[0]);
+      .then(data => {
+        let posts = [ ...this.state.posts ]
+        posts.push(data.post)
+        this.setState({ posts })
+      })
+    };
+    reader.readAsDataURL(this.postFileInput.current.files[0]);
   }
+
   handleSettingChange = (event) => {
     let settingForm = { ...this.state.settingForm }
     if(event.target.id === 'image'){
@@ -159,13 +125,13 @@ class App extends Component {
       },
       body: JSON.stringify(this.state.settingForm)
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(err => {
-        console.log("post fetch in Settings failed: ", err)
-      })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(err => {
+      console.log("post fetch in Settings failed: ", err)
+    })
   }
   render() {
     var settingComponent = () => {
@@ -180,7 +146,6 @@ class App extends Component {
        return <Posts 
             postFileInput={this.postFileInput}
             handlePostSubmit={this.handlePostSubmit}
-            handlePostChange={this.handlePostChange}
             posts={this.state.posts}
             deletePost={this.deletePost}
             {...props}

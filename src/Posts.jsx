@@ -3,7 +3,18 @@ import PropTypes from 'prop-types';
 import withAuth from './withAuth'
 import "./App.css"
 class Posts extends Component {
+  state = {
+    postForm: {},
+  }
+  handlePostChange = (event) => {
+    let postForm = { ...this.state.postForm }
+    console.log(postForm);
+    postForm[event.target.id] = event.target.value
+    console.log(postForm);
+    this.setState({ postForm })
+  }
   render() {
+    console.log(this.props.posts);
     const posttemplate =
       (<table className="py-5 table">
         <thead>
@@ -38,24 +49,24 @@ class Posts extends Component {
           </div>
         
           <div className="col-md-4">
-            <form onSubmit={this.props.handlePostSubmit} className="form-signin">
+            <form onSubmit={(e) => this.props.handlePostSubmit(e, this.state.postForm)} className="form-signin">
               <h2 className="">Create a Post</h2>
 
               <div className="form-group">
                   <label htmlFor="title" className="sr-only">Title</label>
-                  <input onChange={this.props.handlePostChange} type="title" id="title" className="form-control" placeholder="Title" required autoFocus/>
+                  <input title={this.state.postForm.title} onChange={this.handlePostChange} type="title" id="title" className="form-control" placeholder="Title" required />
               </div>
               <div className="form-group">
                   <label htmlFor="content" className="sr-only">Image</label>
-                  <input onChange={this.props.handlePostChange}  ref={this.props.postFileInput} type="file" id="image" className="form-control" placeholder="Title" required autoFocus/>
+                  <input onChange={this.handlePostChange}  ref={this.props.postFileInput} type="file" id="image" className="form-control" placeholder="Title" required/>
               </div>
               <div className="form-group">
                   <label htmlFor="content" className="sr-only">Content</label>
-                  <textarea onChange={this.props.handlePostChange} id="content" className="form-control" placeholder="Content" required></textarea>
+                  <textarea onChange={this.handlePostChange} id="content" className="form-control" placeholder="Content" required></textarea>
               </div>
               <div className="form-group">
                   <label htmlFor="order" className="sr-only">Order</label>
-                  <input onChange={this.props.handlePostChange} type="number" id="order" className="form-control" placeholder="Order" required/>
+                  <input onChange={this.handlePostChange} type="number" id="order" className="form-control" placeholder="Order" required/>
               </div>
               <button className="btn btn-lg btn-primary btn-block">Create</button>
               </form>
