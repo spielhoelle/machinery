@@ -17,7 +17,7 @@ class Navbar extends Component {
     }
     return (
 
-      <nav className="navbar navbar-expand-sm fixed-top navbar-light bg-light">
+      <nav className="navbar navbar-expand-sm navbar-light bg-light">
         <a className="navbar-brand" href="/admin">
           <img className="" style={{width: 100}} src={image}/>
           {title}
@@ -29,11 +29,11 @@ class Navbar extends Component {
           <ul className="navbar-nav">
 
             <li className="nav-item">
-              <Link to="/admin">Posts</Link>
+              <Link className="nav-link" to="/admin">Posts</Link>
             </li>
 
             <li className="nav-item">
-              <Link to="/admin/settings">Settings</Link>
+              <Link className="nav-link" to="/admin/settings">Settings</Link>
             </li>
 
             <li className="nav-item">

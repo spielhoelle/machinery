@@ -20,30 +20,16 @@ class App extends Component {
     posts: []
   }
   componentWillMount = () => {
-    const token = this.getToken()
     this.getposts();
-    //this.getSettings(token);
+    this.getSettings();
   }
-  getSettings = async (token) => {
-    fetch(`${url}/api/setting`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-        }
+  getSettings = async () => {
+    Auth.fetch(`${url}/api/setting`)
+    .then(data => {
+      this.setState({
+        settingForm: data.setting
       })
-      .then(res => res.json())
-      .then(data => {
-        this.setState({
-          settingForm: data.setting
-        })
-      })
-      .catch(err => {
-        console.log("fetch in posts.jsx failed: ", err)
-      })
-      .catch(err => {
-        console.log("fetch in posts.jsx failed: ", err)
-      })
+    })
   }
   getToken = () => {
     const user = localStorage.getItem("user")
@@ -56,6 +42,14 @@ class App extends Component {
     Auth.logOut()
   }
 
+  generateStaticPages = () => {
+    Auth.fetch(`${url}/api/generate`, {
+      method: 'POST',
+    })
+    .then(data => {
+      console.log('#####', 'successfull generated');
+    })
+  }
   getposts = async token => {
     Auth.fetch(`${url}/api/posts`)
     .then(data => {
@@ -113,37 +107,27 @@ class App extends Component {
 
   handleSettingSubmit = (event) => {
     event.preventDefault();
-    this.submitSetting()
-  }
-
-  submitSetting = () => {
-    fetch(`${url}/api/setting`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.getToken()}`
-      },
-      body: JSON.stringify(this.state.settingForm)
+    Auth.fetch(`${url}/api/setting`, {
+        method: 'POST',
+        body: JSON.stringify(this.state.settingForm)
     })
-    .then(res => res.json())
     .then(data => {
-      console.log(data);
-    })
-    .catch(err => {
-      console.log("post fetch in Settings failed: ", err)
+      console.log('#####', posts);
     })
   }
   render() {
-    var settingComponent = () => {
+    var settingComponent = (props) => {
        return <Settings
           settingFileInput={this.settingFileInput}
           handleSettingSubmit={this.handleSettingSubmit}
           handleSettingChange={this.handleSettingChange}
           settingForm={this.state.settingForm}
+          {...props}
         />
       }
      var postComponent = (props) => {
        return <Posts 
+            generateStaticPages={this.generateStaticPages}
             postFileInput={this.postFileInput}
             handlePostSubmit={this.handlePostSubmit}
             posts={this.state.posts}
@@ -153,12 +137,12 @@ class App extends Component {
        }
 
      var loginComponent = (props) => {
-              return <Login
-                  alert={this.state.alert}
-                  user={this.state.user}
-                  {...props}
-                  />
-                }
+      return <Login
+          alert={this.state.alert}
+          user={this.state.user}
+          {...props}
+          />
+        }
     return (
       <BrowserRouter>
         <Switch>
@@ -169,7 +153,7 @@ class App extends Component {
             />
             <Route path="/login" component={loginComponent} />
             <Route exact path="/admin" component={postComponent} />
-            <Route path="/admin/settings" component={settingComponent}/>
+            <Route path="/admin/settings" render={settingComponent}/>
           </div>
         </Switch>
       </BrowserRouter>
