@@ -2,7 +2,7 @@ const path = require("path");
 require('dotenv').config({ path: path.join(__dirname + '/.env') });
 
 const server = require("./app")
-const port = process.env.PORT || "8080";
+const port = process.env.REACT_APP_BACKENDPORT || "4000";
 const domain = process.env.DOMAIN || "localhost";
 console.log("Routes:");
 for (const key in server.router._registry._routes) {

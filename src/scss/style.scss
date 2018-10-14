@@ -16,6 +16,7 @@ html:before{
   background-color: $blue;
   transform: rotate(32deg);
   opacity: .2;
+  pointer-events: none;
 }
 
 body {
