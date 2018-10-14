@@ -5,6 +5,7 @@ import withAuth from './withAuth'
 import "./App.css"
 class Settings extends Component {
   render() {
+  console.log('settings',this.props);
     return (
       <div className="py-5">
         <div className="row mt-4">
@@ -18,7 +19,7 @@ class Settings extends Component {
               </div>
               <div className="form-group">
                   <label htmlFor="content" className="sr-only">Website Logo</label>
-                  <input onChange={this.props.handleSettingChange} defaultValue={this.props.settingForm.image} ref={this.props.settingFileInput} type="file" id="image" className="form-control" placeholder="Title"/>
+                  <input onChange={this.props.handleSettingChange} ref={this.props.settingFileInput} type="file" id="image" className="form-control" placeholder="Title"/>
               </div>
 
               <img className="w-100 pb-2" src={this.props.settingForm.image}/>
