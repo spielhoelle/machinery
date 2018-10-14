@@ -21,15 +21,15 @@ class App extends Component {
     posts: []
   }
   componentWillMount = () => {
-    const token = this.getToken()
     this.getposts();
     this.getSettings();
   }
   getSettings = async () => {
     Auth.fetch(`${url}/api/setting`)
-    .then(settingForm => {
-      this.setState({ settingForm: settingForm.setting })
-      console.log(settingForm);
+    .then(data => {
+      this.setState({
+        settingForm: data.setting
+      })
     })
   }
   getToken = () => {
@@ -43,6 +43,14 @@ class App extends Component {
     Auth.logOut()
   }
 
+  generateStaticPages = () => {
+    Auth.fetch(`${url}/api/generate`, {
+      method: 'POST',
+    })
+    .then(data => {
+      console.log('#####', 'successfull generated');
+    })
+  }
   getposts = async token => {
     Auth.fetch(`${url}/api/posts`)
     .then(data => {
@@ -100,10 +108,6 @@ class App extends Component {
 
   handleSettingSubmit = (event) => {
     event.preventDefault();
-    this.submitSetting()
-  }
-
-  submitSetting = (setting) => {
     Auth.fetch(`${url}/api/setting`, {
         method: 'POST',
         body: JSON.stringify(this.state.settingForm)
@@ -125,6 +129,7 @@ class App extends Component {
       }
      var postComponent = (props) => {
        return <Posts 
+            generateStaticPages={this.generateStaticPages}
             postFileInput={this.postFileInput}
             handlePostSubmit={this.handlePostSubmit}
             posts={this.state.posts}
@@ -134,12 +139,12 @@ class App extends Component {
        }
 
      var loginComponent = (props) => {
-              return <Login
-                  alert={this.state.alert}
-                  user={this.state.user}
-                  {...props}
-                  />
-                }
+      return <Login
+          alert={this.state.alert}
+          user={this.state.user}
+          {...props}
+          />
+        }
     return (
       <BrowserRouter>
         <Switch>
@@ -150,7 +155,7 @@ class App extends Component {
             />
             <Route path="/login" component={loginComponent} />
             <Route exact path="/admin" component={postComponent} />
-            <Route path="/admin/settings" render={() => settingComponent()}/>
+            <Route path="/admin/settings" render={settingComponent}/>
           </div>
         </Switch>
       </BrowserRouter>

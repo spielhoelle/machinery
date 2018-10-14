@@ -53,6 +53,7 @@ class AuthService {
                 password
             })
         }).then((response) => {
+          console.log('#####', response);
             this.setToken(response.user.token);
 
             return Promise.resolve(response);
@@ -171,6 +172,7 @@ class AuthService {
      * @throws Error
      */
     checkResponse(response) {
+        console.log('#####', response);
         if (response.status >= 200 && response.status < 300) {
             return response;
         } else {

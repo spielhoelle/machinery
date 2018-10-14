@@ -19,8 +19,9 @@ export default class Login extends Component {
         console.log(response);
         this.props.history.replace('/admin');
       })
-      .catch(() => {
-          this.setState({showError: true});
+      .catch((err) => {
+        console.log('#####', err);
+        this.setState({showError: true});
       });
   }
   componentDidMount() {
