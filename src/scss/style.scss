@@ -4,6 +4,20 @@
 /* Global
 ----------------------------*/
 
+html:before{
+  content: "";
+  width: 100vw;
+  height: 200%;
+  top: -50%;
+  left: 0;
+  position: fixed;
+  z-index: 0;
+  bottom: 0;
+  background-color: $blue;
+  transform: rotate(32deg);
+  opacity: .2;
+}
+
 body {
     margin-bottom: 50px;
 }

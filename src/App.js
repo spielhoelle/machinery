@@ -14,16 +14,19 @@ class App extends Component {
   settingsRef = React.createRef();
   postFileInput = React.createRef();
   settingFileInput = React.createRef();
+
   state = {
     user: false,
     alert: false,
     settingForm: {},
     posts: []
-  }
+  };
+
   componentWillMount = () => {
     this.getposts();
     this.getSettings();
-  }
+  };
+
   getSettings = async () => {
     Auth.fetch(`${url}/api/setting`)
     .then(data => {
@@ -31,26 +34,23 @@ class App extends Component {
         settingForm: data.setting
       })
     })
-  }
-  getToken = () => {
-    const user = localStorage.getItem("user")
-    if (user) {
-      this.setState({ user: { name: JSON.parse(localStorage.getItem("user")).name, token: JSON.parse(localStorage.getItem("user")).token } })
-      return JSON.parse(localStorage.getItem("user")).token
-    }
-  }
+  };
+
   logout = () => {
     Auth.logOut()
-  }
+  };
 
   generateStaticPages = () => {
+    confirm("This will generate the static html pages.")
     Auth.fetch(`${url}/api/generate`, {
       method: 'POST',
     })
     .then(data => {
+      this.showFlash(`${data.message}`, `success`)
       console.log('#####', 'successfull generated');
     })
-  }
+  };
+
   getposts = async token => {
     Auth.fetch(`${url}/api/posts`)
     .then(data => {
@@ -66,6 +66,7 @@ class App extends Component {
       let posts = [...this.state.posts]
       posts = posts.filter(p => p._id !== id)
       this.setState({ posts: posts })
+      this.showFlash(`${data.message}`, `success`)
     })
   }
   handlePostSubmit = (event, post) => {
@@ -86,6 +87,8 @@ class App extends Component {
         let posts = [ ...this.state.posts ]
         posts.push(data.post)
         this.setState({ posts })
+
+        this.showFlash(`${data.message}`, `success`)
       })
     };
     reader.readAsDataURL(this.postFileInput.current.files[0]);
@@ -113,8 +116,15 @@ class App extends Component {
         body: JSON.stringify(this.state.settingForm)
     })
     .then(data => {
+      this.showFlash(`${data.message}`, `success`)
       console.log('submit:', data);
     })
+  }
+  showFlash = (text, color) => {
+    this.setState({alert: {text: text, color: color}})
+    setTimeout(()=> {
+      this.setState({alert: false})
+    }, 3000)
   }
 
   render() {
@@ -129,7 +139,6 @@ class App extends Component {
       }
      var postComponent = (props) => {
        return <Posts 
-            generateStaticPages={this.generateStaticPages}
             postFileInput={this.postFileInput}
             handlePostSubmit={this.handlePostSubmit}
             posts={this.state.posts}
@@ -149,7 +158,11 @@ class App extends Component {
       <BrowserRouter>
         <Switch>
           <div className='h-100'>
+            {this.state.alert && ( 
+              <div className={`fixed-bottom m-3 mb-0 alert alert-${this.state.alert.color}`}>{this.state.alert.text}</div>
+            )}
             <Navbar
+              generateStaticPages={this.generateStaticPages}
               logout={this.logout} 
               settingForm={this.state.settingForm}
             />

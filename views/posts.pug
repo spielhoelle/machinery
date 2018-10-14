@@ -1,9 +1,8 @@
 .card-columns.mb-3.text-center
   each post in posts
     .card.mb-4.shadow-sm
-      .card-header
-        h4.my-0.font-weight-normal=post.title
+      img.card-img.top(src=post.image alt=post.title)
       .card-body
-        h1.card-title.pricing-card-title=post.imageName 
+        h5.card-title=post.title
         p=post.content
-        button.btn.btn-lg.btn-block.btn-outline-primary(type='button') Sign up for free
+        button.btn.btn-lg.btn-block.btn-outline-primary(type='button') Read more

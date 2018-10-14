@@ -5,20 +5,17 @@ import withAuth from './withAuth'
 import "./App.css"
 class Settings extends Component {
   render() {
-  console.log('settings',this.props);
     return (
-      <div className="py-5">
-        <div className="row mt-4">
-          <div className="col-md-4">
+      <div className="">
+        <div className="row">
+          <div className="col-md-4 offset-md-4">
             <form onSubmit={this.props.handleSettingSubmit} className="form-signin">
-              <h2 className="">Website settings</h2>
-
               <div className="form-group">
-                  <label htmlFor="title" className="sr-only">Website Title</label>
+                  <label htmlFor="title" >Website Title</label>
                   <input onChange={this.props.handleSettingChange} defaultValue={this.props.settingForm.title} type="title" id="title" className="form-control" placeholder="Title"/>
               </div>
               <div className="form-group">
-                  <label htmlFor="content" className="sr-only">Website Logo</label>
+                  <label htmlFor="content" >Website Logo</label>
                   <input onChange={this.props.handleSettingChange} ref={this.props.settingFileInput} type="file" id="image" className="form-control" placeholder="Title"/>
               </div>
 

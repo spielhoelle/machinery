@@ -40,11 +40,9 @@ class Posts extends Component {
       </table>)
 
     return (
-      <div className="py-5">
+      <div className="container-fluid">
         <div className="row mt-4">
           <div className="col-md-8">
-            <a href='#' onClick={this.props.generateStaticPages}>Generate</a>
-            <h2>Hey {this.props.user.name.charAt(0).toUpperCase() + this.props.user.name.slice(1)}, this are your posts:</h2>
             {posttemplate}
           </div>
         
