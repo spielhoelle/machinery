@@ -11,7 +11,7 @@ const passportAuthenticate = function(req, res, next) {
       res.json(403, {
         code: 403,
         message: "Unauthorized",
-        url: `http://${req.headers.host}/login`
+        url: `${req.headers.host}/login`
       });
     }
 

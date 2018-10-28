@@ -32,7 +32,7 @@ const corsMiddleware = require('restify-cors-middleware')
 
 const cors = corsMiddleware({
   preflightMaxAge: 5, //Optional
-  origins: ['http://localhost:5000', 'http://nanostatic.tmy.io'],
+  origins: ['http://localhost:5000', 'http://machinery.tmy.io'],
   allowHeaders: ['Authorization'],
   exposeHeaders: ['Authorization']
 })
