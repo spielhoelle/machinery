@@ -81,10 +81,11 @@ var database_to_use =
 // var database_to_use = process.env.DATABASE_NAME;
 
 mongoose.Promise = global.Promise;
+const url = `mongodb://${process.env.DATABASE_HOST || "localhost"}:${process.env.DATABASE_PORT || 27017}/${database_to_use || "react-native-app"}`
+console.log('Connecting to mongopath: ' + url);
 mongoose
   .connect(
-    `mongodb://${process.env.DATABASE_HOST || "localhost"}:${process.env
-      .DATABASE_PORT || 27017}/${database_to_use || "react-native-app"}`,
+    url,
     mongooseOptions
   )
   .catch(error => {
