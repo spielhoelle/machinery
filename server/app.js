@@ -9,6 +9,8 @@ const restifyValidator = require("restify-validator");
 const errorHandlers = require("./handlers/errorHandlers");
 const JWTAuthenticatedUser = require("./handlers/JWTAuthenticatedUser");
 const path = require("path");
+const {url, mongooseOptions} =  require('../helpers/db')
+
 require("./handlers/passport");
 require("dotenv").config({ path: path.join(__dirname + "/../.env") });
 //const requireAuth = passport.authenticate("jwt", { session: false });
@@ -59,30 +61,8 @@ server.use((req, res, next) => {
   next();
 });
 
-let mongooseOptions = {};
-
-if (
-  process.env.DATABASE_USERNAME &&
-  process.env.DATABASE_PASSWORD &&
-  process.env.DATABASE_USERNAME.trim() !== "" &&
-  process.env.DATABASE_PASSWORD.trim() !== ""
-) {
-  mongooseOptions = {
-    auth: {
-      user: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD
-    }
-  };
-}
-var database_to_use =
-  process.env.NODE_ENV == "test"
-    ? process.env.DATABASE_NAME_TEST
-    : process.env.DATABASE_NAME;
-// var database_to_use = process.env.DATABASE_NAME;
-
 mongoose.Promise = global.Promise;
-const url = `mongodb://${process.env.DATABASE_HOST || "localhost"}:${process.env.DATABASE_PORT || 27017}/${database_to_use || "react-native-app"}`
-console.log('Connecting to mongopath: ' + url);
+
 mongoose
   .connect(
     url,

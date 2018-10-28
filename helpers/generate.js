@@ -5,9 +5,10 @@ const glob = require('glob');
 const files = glob.sync('**/*.pug', { cwd: `views/pages` });
 fse.ensureDirSync('dist');
 
+const {url, mongooseOptions} =  require('./db')
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/nanostatic');
+mongoose.connect(url);
 
 var Schema       = mongoose.Schema;
 
