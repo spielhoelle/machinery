@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "concurrently \"npm run build\" \"nodemon server/index.js\" \"webpack --mode development --watch\" \"serve ./dist\" -n \"BUILD,SERVER,WEBPACK,SERVE\" --prefix name -c \"blue.bold,yellow.bold,red.bold,magenta.bold\"",
+    "prod": "NODE_ENV=production webpack -p && NODE_ENV=production node ./build && node server/index.js",
     "build": "node ./build",
-    "build:prod": "cross-env NODE_ENV=production node ./build && bash deploy.sh",
+    "build:prod": "NODE_ENV=production node ./build && bash deploy.sh",
     "serve": "serve ./dist",
     "test": "NODE_ENV=test && mocha --timeout 10000"
   },
@@ -23,7 +24,6 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "chokidar": "^2.0.4",
-    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "es6-promisify": "^5.0.0",
     "express-validator": "^5.2.0",

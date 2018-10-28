@@ -31,11 +31,12 @@ var run = async() => {
     var posts = await getPosts();
     var settings = await getSettings();
     settings = settings[0]
-    return files.forEach((file, i) => {
+    files.forEach((file, i) => {
       const fileData = path.parse(file);
       console.log(`Generated: dist/${fileData.name}.html`);
       return fse.writeFile(`dist/${fileData.name}.html`, pug.renderFile(`views/pages/${fileData.base}`, {posts, settings}));
     })
+    return mongoose.disconnect()
   }
   catch(e){
     console.error(e)
