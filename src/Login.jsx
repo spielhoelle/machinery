@@ -16,7 +16,7 @@ export default class Login extends Component {
     e.preventDefault();
     Auth.login(this.state.form.email, this.state.form.password)
       .then((response) => {
-        console.log(response);
+        this.props.logginIn(response.user)
         this.props.history.replace('/admin');
       })
       .catch((err) => {
