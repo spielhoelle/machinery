@@ -1,4 +1,3 @@
-const { parse, stringify } = require("flatted/cjs");
 const mongoose = require("mongoose");
 const postSchema = require("../models/Post");
 const Post = mongoose.model("Post", postSchema);
@@ -8,11 +7,30 @@ const fs = require("fs");
 const path = require("path");
 const { createRecursiveFolderPath } = require("../handlers/helpers");
 const FILE_PATH = "./temp/uploads/posts/";
-
+const PouchDB = require("pouchdb")
+var db = new PouchDB(`${process.env.COUCHHOST}`);
+PouchDB.plugin(require('pouchdb-find'));
+db.createIndex({
+  index: {fields: ['user']}
+});
 exports.getPosts = async (req, res, next) => {
   const user = req.user;
   try {
-    const posts = await Post.find({ user: req.user._id });
+    // const posts = await Post.find({ user: req.user._id });
+    try {
+      var result = await db.find({
+        selector: {user: req.user._id},
+      });
+
+      res.json(200, {
+        code: 200,
+        message: `All posts for '${user.name}'`,
+        user: user,
+        posts: result.docs
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
     // posts.forEach(post => {
     //   let imagePath = fs.statSync(
@@ -22,12 +40,7 @@ exports.getPosts = async (req, res, next) => {
     //   post.file = imagePath;
     // });
 
-    res.json(200, {
-      code: 200,
-      message: `All posts for '${user.name}'`,
-      user: user,
-      posts: posts
-    });
+    
   } catch (err) {
     console.log(err);
     res.json(404, {
@@ -122,21 +135,23 @@ exports.getSinglePost = async (req, res, next) => {
 
 exports.createPost = async (req, res, next) => {
   try {
-    const foundPost = await Post.findOne(
-      { title: req._body.title },
-      req.body
-    ).exec();
+    // const foundPost = await Post.findOne(
+    //   { title: req._body.title },
+    //   req.body
+    // ).exec();
 
-    if (foundPost) {
-      res.json(401, {
-        code: 401,
-        message: "This post is already existed , Please choose another name"
-      });
-      console.log(`This post is already existed , Please choose another name`);
-      next(false);
-      return;
-    }
-
+    // if (foundPost) {
+    //   res.json(401, {
+    //     code: 401,
+    //     message: "This post is already existed , Please choose another name"
+    //   });
+    //   console.log(`This post is already existed , Please choose another name`);
+    //   next(false);
+    //   return;
+    // }
+    
+    console.log('req.body.image', req.body.image.slice(0, 200));
+    
     let postObject = {
       user: req.user._id,
       title: req._body.title,
@@ -144,18 +159,23 @@ exports.createPost = async (req, res, next) => {
       content: req._body.content,
       //imageName: req.image.name,
       date: new Date(),
-      image: req.body.image
+      "_attachments": {
+        "image.jpeg": {
+          "content_type": "text/plain",
+          "data": req.body.image
+        }
+      }
     };
-
-    const post = await new Post(postObject).save();
-
-    res.json(200, {
-      code: 200,
-      message: `Successfully created '${post.title}'`,
-      post: postObject
-    });
+      var response = await db.post(postObject);
+      console.log('response', response);
+      
+      res.json(200, {
+        code: 200,
+        message: `Successfully created '${postObject.title}'`,
+        post: postObject
+      });
   } catch (err) {
-    console.log(err);
+    console.log("err:=", err);
     res.json(422, {
       code: 422,
       message: "Unprocessable entity"
@@ -220,7 +240,11 @@ exports.updatePost = async (req, res, next) => {
 
 exports.deletePost = async (req, res, next) => {
   try {
-    const post = await Post.findOne({ _id: req.params.id });
+    const post = await db.get(req.params.id );
+    var response = await db.remove(post);
+
+    console.log('post', response);
+    
 
     if (!post) {
       res.json(404, {
@@ -230,31 +254,15 @@ exports.deletePost = async (req, res, next) => {
       next(false);
       return;
     }
+    console.log(`Successfully removed`);
+    res.json(200, {
+      code: 200,
+      message: `Successfully removed`
+    });
   } catch (message) {
     res.json(404, {
       code: 404,
-      message: "Post not found "
-    });
-  }
-
-  try {
-    const post = await Post.findOne({ _id: req.params.id });
-
-    if (req.params.id === post.id) {
-      console.log("=============post=============");
-      console.log(post);
-      post.remove();
-
-      console.log(`Successfully removed`);
-      res.json(200, {
-        code: 200,
-        message: `Successfully removed`
-      });
-    }
-  } catch (message) {
-    res.json(403, {
-      code: 403,
-      message: "ERROR FORBIDDEN"
+      message: message
     });
   }
 };

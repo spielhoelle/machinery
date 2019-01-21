@@ -17,14 +17,9 @@ module.exports = (env, argv) => {
       filename: "[name].bundle.js",
       path: path.resolve(__dirname, "dist")
     },
-
-    // Define development options
     devtool: "source-map",
-
-    // Define loaders
     module: {
       rules: [
-        // Compile and extract SCSS files
         {
           test: /\.scss$/,
           exclude: /(node_modules)/,

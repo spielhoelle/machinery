@@ -1,9 +1,9 @@
 const passport = require("passport");
 const crypto = require("crypto");
+const util = require("util");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 require("../handlers/passport");
-const promisify = require("es6-promisify");
 const userSchema = require("../models/User");
 const User = mongoose.model("User", userSchema);
 const { isJsonString } = require('../handlers/helpers')
@@ -141,7 +141,7 @@ exports.updatePassword = async (req, res, next) => {
   }
 
   try {
-    const setPassword = promisify(user.setPassword, user);
+    const setPassword = util.promisify(user.setPassword, user);
     await setPassword(req.body.password);
 
     user.resetPasswordToken = undefined;

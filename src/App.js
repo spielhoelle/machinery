@@ -57,7 +57,9 @@ class App extends Component {
 
   getposts = async token => {
     Auth.fetch(`${url}/api/posts`).then(data => {
-      this.setState({ posts: data.posts });
+      if (data.posts.length > 0) {
+        this.setState({ posts: data.posts });
+      }
     });
   };
 
@@ -73,26 +75,50 @@ class App extends Component {
   };
   handlePostSubmit = (event, post) => {
     event.preventDefault();
-    const reader = new FileReader();
-    reader.onload = event => {
-      const formData = {
-        image: reader.result,
-        title: post.title,
-        content: post.content,
-        order: post.order
-      };
-      Auth.fetch(`${url}/api/posts/add`, {
+    // const reader = new FileReader();
+    // reader.onload = event => {
+
+    console.log('event.currentTarget.elements', event.currentTarget.elements.image.files[0]);
+    
+      // let formData = new FormData();
+      // for (let key in event.currentTarget.elements) {
+        
+        
+      //   if(event.currentTarget.elements[key].files){
+      //     formData.append('image', event.currentTarget.elements[key].files[0]);
+
+      //   } else {
+
+      //     formData.append(key, event.currentTarget.elements[key].value);
+      //   }
+      // }
+      
+      
+      let formData = new FormData();
+    //file is actually new FileReader.readAsDataURL(myId.files[0]);
+      formData.append("image", event.currentTarget.elements.image.files[0])
+      formData.append("title", post.title,)
+      formData.append("content", post.content,)
+      formData.append("order", post.order)
+      fetch(`${url}/api/posts/add`, {
         method: "POST",
-        body: JSON.stringify(formData)
+        body: formData,
+        headers: { 
+          Accept: 'multipart/form-data', 'Content-Type': 'multipart/form-data' 
+        },
       }).then(data => {
+        console.log('data', data);
+
+
+        
         let posts = [...this.state.posts];
         posts.push(data.post);
         this.setState({ posts });
 
         this.showFlash(`${data.message}`, `success`);
       });
-    };
-    reader.readAsDataURL(this.postFileInput.current.files[0]);
+    // };
+    // reader.readAsDataURL(this.postFileInput.current.files[0]);
   };
 
   handleSettingChange = event => {

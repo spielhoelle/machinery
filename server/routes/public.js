@@ -13,6 +13,9 @@ const CategoryController = require("../controllers/CategoryController");
 //     res.redirect(404, "/", next);
 // });
 
+router.get("", (req, res) => {
+    res.json("Welcome to machinery API")
+});
 router.post("/register", UserController.register);
 router.post("/login", AuthController.login);
 

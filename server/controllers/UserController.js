@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
+const util = require("util");
 const userSchema = require("../models/User");
 const User = mongoose.model("User", userSchema);
 const Post = require("../models/Post");
 const Category = require("../models/Category");
 
 const passport = require("passport");
-const promisify = require("es6-promisify");
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname + "/.env") });
 require("../handlers/passport");
@@ -19,7 +19,9 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const CategorySeedLoader = require("../modules/CategorySeedLoader");
 
 exports.register = async (req, res, next) => {
-  const register = promisify(User.register, User);
+  console.log('req.body', req.body);
+  
+  const register = util.promisify(User.register, User);
 
   const user = new User({
     name: req.body.name,

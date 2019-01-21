@@ -10,6 +10,7 @@ if (
   process.env.DATABASE_PASSWORD.trim() !== ""
 ) {
   mongooseOptions = {
+    useNewUrlParser: true,
     auth: {
       user: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD
@@ -21,6 +22,6 @@ var login = (process.env.DATABASE_USERNAME && process.env.DATABASE_PASSWORD) ? `
 var host = process.env.DATABASE_HOST ? process.env.DATABASE_HOST : "localhost";
 var port = process.env.DATABASE_PORT ? process.env.DATABASE_PORT : 27017;
 
-var url = `mongodb://${login}@${host}:${port}/${database_to_use || "machinery"}`
+var url = `mongodb://${process.env.MONGOHOST}`
 
 module.exports = { url: url, mongooseOptions: mongooseOptions }

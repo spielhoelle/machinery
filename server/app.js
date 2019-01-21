@@ -3,7 +3,6 @@ const util = require("util");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const passport = require("passport");
-const promisify = require("es6-promisify");
 const expressValidator = require("express-validator");
 const restifyValidator = require("restify-validator");
 const errorHandlers = require("./handlers/errorHandlers");
@@ -32,7 +31,7 @@ const corsMiddleware = require('restify-cors-middleware')
 
 const cors = corsMiddleware({
   preflightMaxAge: 5, //Optional
-  origins: ['http://localhost:5000', 'http://machinery.tmy.io'],
+  origins: ['http://localhost', 'http://machinery.tmy.io'],
   allowHeaders: ['Authorization'],
   exposeHeaders: ['Authorization']
 })
@@ -57,7 +56,7 @@ server.use(passport.initialize());
 server.use(passport.session());
 
 server.use((req, res, next) => {
-  req.login = promisify(req.login, req);
+  req.login = util.promisify(req.login, req);
   next();
 });
 

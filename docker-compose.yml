@@ -1,0 +1,45 @@
+version: "2"
+services:
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - /data:/data/db
+    ports:
+      - "27017:27017"
+
+  couchdb:
+    container_name: couchdb
+    image: couchdb
+    ports:
+      - "35984:5984"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - dist-folder:/usr/share/nginx/html/
+    ports:
+      - 3000:80
+      - 443:443
+      
+  machinery:
+    user: root
+    environment:
+      - MONGOHOST=mongo
+      - COUCHHOST=couchdb
+    container_name: machinery
+    restart: always
+    build: . 
+    ports:
+      -  "${REACT_APP_BACKENDPORT}:${REACT_APP_BACKENDPORT}"
+    links:
+      - mongo
+      - couchdb
+    volumes:
+      - dist-folder:/home/node/app/dist
+      - .:/home/node/app
+      - /home/node/app/node_modules
+volumes:
+ dist-folder:

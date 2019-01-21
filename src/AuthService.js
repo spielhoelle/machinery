@@ -106,9 +106,9 @@ class AuthService {
     return decode(this.getToken());
   }
   fetch(url, options) {
-    const headers = {
-      Accept: "application/json",
-      "Content-Type": "application/json"
+    let headers = {
+      Accept: "multipart/form-data",
+      'Content-Type': 'multipart/form-data'
     };
 
     if (this.loggedIn()) {
